@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+      xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>BTS</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../static/style1.css">
+    <link rel="stylesheet" href="../static/2.gif">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../static/wind_direction.jpg">
+    <style>
+
+        .card{
+            width:700px;
+            height:450px;
+        }
+        .container{
+            width:700px;
+            height:450px;
+            position : block;
+            left : 0px;
+            top : 80px;
+
+        }
+
+        .container1{
+            width:700px;
+            height:450px;
+            position : block;
+            left : 0px;
+            top : 80px;
+            margin-left: 2%;
+
+        }
+
+        .container2{
+            width:700px;
+            height:450px;
+            position : block;
+            left : 0px;
+            top : 80px;
+            margin-left: 2%;
+            margin-bottom : 5%;
+        }
+
+        .row{
+            width:1500px;
+        }
+
+        .box{
+            display: flex;
+            grid-template-columns: auto auto;
+            grid-gap: 20px;
+            justify-content: center;
+            align-items: center;
+<!--            top : 80px;-->
+<!--            position: relative;-->
+<!--            padding: 30px;-->
+            margin: 20px; /* Sets the margin for all four sides of the box */
+            border: 3px solid black; /* Adds a border around the box */
+            padding: 30px; /* Adds padding inside the box */
+            background-color: lightgray;
+            width : 70%;
+            margin-left: 17%;
+        }
+
+        .box.small-horizontal-border {
+          border-left-width: 0; /* Removes the left border */
+          border-right-width: 0; /* Removes the right border */
+        }
+
+        .box1 {
+            width:270px;
+            height:550px;
+            padding: 5px;
+            border:2px solid black;
+            justify-content: center; /* căn giữa theo chiều ngang */
+            align-items: center; /* căn giữa theo chiều dọc */
+            positon: relative;
+            left: 20%;
+            background-Color: #FFFFFF;
+        }
+        .box2{
+            width:400px;
+            height:320px;
+            padding:5px;
+            border: 2px solid black;
+            position:relative;
+            background-Color: #72A6D3;
+        }
+
+        .infor{
+             height: auto;
+             padding: 30px;
+             display: grid;
+             grid-template-columns: 150px 500px;
+             gap:20px;
+<!--             background-color: #EEEEEE;-->
+             left: 30px;
+             padding-left: 30%;
+             font-size: 24px;
+        }
+        .item1{
+            box-sizing: border-box;
+            padding: 50px;
+            background-Color : #72A6D3;
+            padding-top: 90px;
+        }
+
+        .item2{
+            box-sizing: border-box;
+            padding: 30px;
+            background-Color: #FFCC00;
+            float: left
+            text-align: justify;
+
+        }
+        .body{
+            border: 50px solid black;
+        }
+
+        .compass {
+          width: 200px;
+          height: 200px;
+          position: relative;
+          overflow: hidden;
+        }
+        .compass img {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+<!--          width: 100%;-->
+<!--          height: 100%;-->
+        }
+        .compass .needle {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 80px;
+          height: 2px;
+          background-color: red;
+          transform-origin: 0% 50%;
+          transform: rotate(0deg);
+          transition: transform 0.5s ease-in-out;
+        }
+
+    </style>
+    <script>
+    var x;
+        const source = new EventSource("/chart-data");
+        function myFunction(){
+        source.onmessage = function (event) {
+
+            const data = JSON.parse(event.data);
+
+            status1 = data.status1;
+            F1 = data.F1;
+            F2 = data.F2;
+            F3 = data.F3;
+            F4 = data.F4;
+            F5 = data.F5;
+            F6 = data.F6;
+            F7 = data.F7;
+            F8 = data.F8;
+            F9 = data.F9;
+            x = data.x;
+            y = data.y;
+            z = data.z;
+            capgio = data.capgio;
+            huonggio = data.huonggio;
+            gocnghieng = data.gocnghieng;
+            acc1 = data.acc1;
+            acc2 = data.acc2;
+            acc3 = data.acc3;
+            gyro1 = data.gyro1;
+            gyro2 = data.gyro2;
+            gyro3 = data.gyro3;
+
+<!--            console.log(xcan);-->
+
+            document.getElementById("status1").innerHTML = status1;
+            document.getElementById("x").innerHTML= x ;
+            document.getElementById("y").innerHTML= y ;
+            document.getElementById("z").innerHTML= z ;
+            document.getElementById("capgio").innerHTML= capgio ;
+            document.getElementById("huonggio").innerHTML= huonggio ;
+            document.getElementById("gocnghieng").innerHTML= gocnghieng ;
+
+
+            statusNum = data.statusNum;
+            if( statusNum == 2){
+                document.body.style.backgroundColor = '#77141D';
+                var modal = document.getElementById("warningModal");
+                modal.style.display = "block";
+<!--                document.getElementById("img").src = "F:/1,a/Download_File/1.png";-->
+            }else if(statusNum == 0)
+            {
+                document.body.style.backgroundColor = "white";
+            }
+            else if (statusNum == 1)
+            {
+                document.body.style.backgroundColor = '#FAFAD2';
+            }
+
+<!--            thêm predict model AI chuyển đổi màu -->
+
+<!--            if(capgio < 2)-->
+<!--            {-->
+<!--                document.body.style.backgroundColor = 'green';-->
+<!--            }else if (capgio < 4)-->
+<!--            {-->
+<!--                document.body.style.backgroundColor = 'blue';-->
+<!--            }else if (capgio < 6)-->
+<!--            {-->
+<!--                document.body.style.backgroundColor = 'red';-->
+<!--            }-->
+        }
+        }
+
+function updateBackgroundNew(){
+        source.onmessage = function (event) {
+
+            const data = JSON.parse(event.data);
+            statusNum = data.statusNum;
+            console.log(statusNum);
+            if( statusNum == 1){
+                document.body.style.backgroundColor = "red";
+                alert(" Warning !!!!!");
+            }else if(statusNum == 0)
+            {
+                document.body.style.backgroundColor = "white";
+            }
+        }
+}
+
+console.log(x);
+    </script>
+
+</head>
+<body onload=" updateBackgroundNew(); myFunction() ;  ">
+<nav>
+    <div class="brand">
+        <h2>BK</h2>
+    </div>
+    <ul>
+        <li><a href="http://127.0.0.1:6868"><i class="fa fa-home" aria-hidden="true"></i> Home</a></li>
+        <li><a href=""><i class="fa fa-info" aria-hidden="true"></i> Information </a></li>
+        <li><a href="http://127.0.0.1:6868/data_analysis "><i class="fa fa-truck" aria-hidden="true"></i> Data Analysis</a>
+        </li>
+        <li><a href=""><i class="fa fa-location-arrow" aria-hidden="true"></i> Address</a></li>
+    </ul>
+</nav>
+
+
+<div id="warningModal" style="display:none; position:fixed; z-index:1; padding-top:100px; left:0; top:0; width:100%; height:100%; overflow:auto; background-color:rgba(0,0,0,0.4);">
+      <div style="background-color:#fefefe; margin:auto; padding:20px; border:1px solid #888; width:80%;">
+        <h2>Warning</h2>
+        <p>This is a warning message : the column needs immediate maintenance</p>
+        <button onclick="document.getElementById('warningModal').style.display='none'">Close</button>
+      </div>
+</div>
+
+
+<div class="infor">
+    <div class="item1", text-align: center > No.1</div>
+    <div class="item2">
+        <ol>
+            <li>Address: Đại Học BKHN </li>
+            <li>Coordinates: (16.4593,107.5779) </li>
+            <li>Status : <span id="status1"></span> </li>
+        </ol>
+    </div>
+</div>
+
+
+<div class="box">
+    <div class="box1" > <br>
+        <img src="../static/2.gif"  height="480" width="242">
+    </div>
+
+    <div class="box2"> Tọa độ chuyển vị của cột tại vị trí cao nhất
+        <br>
+        <br>
+        <ol>
+            <li> X : <span id="x"></span> ( cm )</li>
+            </br>
+            <li> Y : <span id="y"></span>( cm )</li>
+            </br>
+            <li> Z : <span id="z"></span>( cm )</li>
+            </br>
+            <li> Cấp gió : <span id="capgio"></span></li>
+            </br>
+            <li> Hướng gió : <span id="huonggio"></span></li>
+            </br>
+            <li> Góc nghiêng : <span id="gocnghieng"></span> ( độ )</li>
+            </br>
+
+        </ol>
+    </div>
+</div>
+
+<br>
+<br>
+<br>
+
+
+<div class="container1">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="canvas" style=" height = 100px, width = 100px"> Information</canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="bar-canvas" style="height = 50px, width=100px"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<br>
+<br>
+
+<div class="container2">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="canvasAcc" style=" height = 100px, width = 100px"> Information</canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <canvas id="canvasGyro" style="height = 100px, width=100px"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+
+<!--suppress JSUnresolvedLibraryURL -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<!--suppress JSUnresolvedLibraryURL -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!--suppress JSUnresolvedLibraryURL -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+<script>
+
+    $(document).ready(function () {
+        const config = {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: "m/s",
+                    backgroundColor: 'rgb(255, 99, 132)',
+                    borderColor: 'rgb(255, 99, 132)',
+                    data: [],
+                    fill: false,
+                }],
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Biểu đồ vận tốc gió'
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Time',
+                            fontSize : 20
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Value',
+                            fontSize : 20
+                        },
+                        ticks: {
+                          fontSize: 20
+                        }
+                    }]
+                }
+            }
+        };
+
+        const context = document.getElementById('canvas').getContext('2d');
+
+        const lineChart = new Chart(context, config);
+
+        const source = new EventSource("/chart-data");
+
+        source.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            if (config.data.labels.length === 30) {
+                config.data.labels.shift();
+                config.data.datasets[0].data.shift();
+            }
+            config.data.labels.push(data.time);
+            config.data.datasets[0].data.push(data.speed);
+            lineChart.update();
+        }
+    });
+
+
+    $(document).ready(function () {
+        const configBar = {
+            type: 'bar',
+            data: {
+                labels: ["F1", "F2", "F3", "F4","F5", "F6", "F7", "F8", "F9"],
+                datasets: [{
+                    label: "kN",
+                    backgroundColor: [
+                      'rgba(169,86,87, 1)',
+                      'rgba(227,193,179, 1)',
+                      'rgba(135, 151, 122, 1)',
+                      'rgba(79, 81, 82, 1)',
+                      'rgba(87,163,179,1)',
+                      'rgba(15.3, 22.7, 34.9, 1)',
+                      'rgba(0, 71, 171, 1)',
+                      'rgba(193, 218, 235, 1)',
+                      'rgba(87,163,179, 1)'
+                    ],
+                    borderColor: [
+                      'rgb(255, 99, 132)',
+                      'rgb(255, 159, 64)',
+                      'rgb(255, 205, 86)',
+                      'rgb(75, 192, 192)',
+                      'rgb(54, 162, 235)',
+                      'rgb(153, 102, 255)',
+                      'rgb(201, 203, 207)'
+                    ],
+                    borderWidth: 1,
+                    data: [],
+                }],
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Biểu đồ lực căng dây',
+                    fontSize : 20
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                        },
+                        stacked: true,
+                        ticks: {
+                          fontSize: 20,
+                        }
+                    }],
+                    xAxes:[{
+                        ticks: {
+                          fontSize: 20,
+                        }
+                    }]
+                }
+            }
+        };
+
+        const context = document.getElementById('bar-canvas').getContext('2d');
+
+        const barChart = new Chart(context, configBar);
+
+        const source = new EventSource("/chart-data");
+
+        source.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            if (configBar.data.labels.length == 9) {
+                configBar.data.labels.shift();
+                configBar.data.labels.shift();
+                configBar.data.labels.shift();
+                configBar.data.labels.shift();
+                configBar.data.labels.shift();
+                configBar.data.labels.shift();
+                configBar.data.labels.shift();
+                configBar.data.labels.shift();
+                configBar.data.labels.shift();
+
+                configBar.data.datasets[0].data.shift();
+                configBar.data.datasets[0].data.shift();
+                configBar.data.datasets[0].data.shift();
+                configBar.data.datasets[0].data.shift();
+                configBar.data.datasets[0].data.shift();
+                configBar.data.datasets[0].data.shift();
+                configBar.data.datasets[0].data.shift();
+                configBar.data.datasets[0].data.shift();
+                configBar.data.datasets[0].data.shift();
+            }
+            configBar.data.labels.push("F1", "F2", "F3", "F4","F5", "F6", "F7", "F8", "F9");
+            configBar.data.datasets[0].data.push(data.F1, data.F2, data.F3, data.F4, data.F5, data.F6, data.F7, data.F8, data.F9);
+            barChart.update();
+        }
+    });
+
+
+    $(document).ready(function () {
+        const configBar = {
+            type: 'bar',
+            data: {
+                labels: ["Trục Ox", "Trục Oy", "Trục Oz"],
+                datasets: [{
+                    label: "m/s^2",
+                    backgroundColor: [
+                      'rgba(169,86,87, 1)',
+                      'rgba(227,193,179, 1)',
+                      'rgba(135, 151, 122, 1)'
+                    ],
+                    borderColor: [
+                      'rgb(255, 99, 132)',
+                      'rgb(255, 159, 64)',
+                      'rgb(255, 205, 86)'
+                    ],
+                    borderWidth: 1,
+                    data: [],
+                }],
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Biểu đồ gia tốc',
+                    fontSize : 20
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                        },
+                        stacked: true,
+                        ticks: {
+                          fontSize: 20
+                        }
+                    }],
+                    xAxes:[{
+                        ticks: {
+                          fontSize: 20,
+                        }
+                    }]
+                }
+            }
+        };
+
+        const context = document.getElementById('canvasAcc').getContext('2d');
+
+        const ChartAcc = new Chart(context, configBar);
+
+        const source = new EventSource("/chart-data");
+
+        source.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            if (configBar.data.labels.length == 3) {
+                configBar.data.labels.shift();
+                configBar.data.labels.shift();
+                configBar.data.labels.shift();
+
+                configBar.data.datasets[0].data.shift();
+                configBar.data.datasets[0].data.shift();
+                configBar.data.datasets[0].data.shift();
+            }
+            configBar.data.labels.push("Trục Ox", "Trục Oy", "Trục Oz");
+            configBar.data.datasets[0].data.push(data.acc1, data.acc2, data.acc3);
+            ChartAcc.update();
+        }
+    });
+
+    $(document).ready(function () {
+        const configBar = {
+            type: 'bar',
+            data: {
+                labels: ["Trục Ox", "Trục Oy", "Trục Oz"],
+                datasets: [{
+                    label: "rad/s",
+                    backgroundColor: [
+                      'rgba(0, 71, 171, 1)',
+                      'rgba(193, 218, 235, 1)',
+                      'rgba(87,163,179, 1)'
+                    ],
+                    borderColor: [
+                      'rgb(255, 99, 132)',
+                      'rgb(255, 159, 64)',
+                      'rgb(255, 205, 86)'
+                    ],
+                    borderWidth: 1,
+                    data: [],
+                }],
+            },
+            options: {
+                responsive: true,
+                title: {
+                    display: true,
+                    text: 'Biểu đồ Gyroscope',
+                    fontSize: 20,
+                },
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                        },
+                        stacked: true,
+                        ticks: {
+                          fontSize: 20,
+                        }
+                    }],
+                    xAxes:[{
+                        ticks: {
+                          fontSize: 20,
+                        }
+                    }]
+                }
+            }
+        };
+
+        const context = document.getElementById('canvasGyro').getContext('2d');
+
+        const ChartGyro = new Chart(context, configBar);
+
+        const source = new EventSource("/chart-data");
+
+        source.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            if (configBar.data.labels.length == 3) {
+                configBar.data.labels.shift();
+                configBar.data.labels.shift();
+                configBar.data.labels.shift();
+
+                configBar.data.datasets[0].data.shift();
+                configBar.data.datasets[0].data.shift();
+                configBar.data.datasets[0].data.shift();
+            }
+            configBar.data.labels.push("Trục Ox", "Trục Oy", "Trục Oz");
+            configBar.data.datasets[0].data.push(data.gyro1, data.gyro2, data.gyro3);
+            ChartGyro.update();
+        }
+    });
+
+</script>
+</body>
+</html>
+<script>
+    setInterval(function() {
+      fetch('/chart-data').then(
+        response => response.json()
+      ).then(
+        data =>
+          data.forEach(match =>
+            updateElement(match)
+          )
+      )
+    }, 1000
+  );
+
+function updateElement(match) {
+    Object.entries(match).forEach(([k,v]) => {
+        element = document.getElementById(k + "_" + match.id);
+        // Get Previous value first
+        previousValue = element.innerHTML;
+        console.log(previousValue);
+        // If Previous value is not equal to the new value, change it!
+        if (previousValue !== v.toString()) {
+            blinkUpdate(element, v.toString())
+        }
+    })
+}
+
+function blinkUpdate(element, newValue, newColor='#00ff00') {
+    previousColor = element.style.color;
+    element.innerHTML = newValue;
+    element.style.color = newColor;
+    // Set back to original color after timeout ms
+    setTimeout(() => {
+        element.style.color = previousColor
+    }, 1000)
+}
+
+
+</script>
+
+

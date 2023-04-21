@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaflet Tutorial</title>
+
+    <!-- leaflet css  -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+        <link rel="stylesheet" href="../static/icon_4.png">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            width: 100%;
+            height: 100vh;
+        }
+
+        .coordinate {
+            position: absolute;
+            bottom: 10px;
+            right: 50%;
+        }
+
+        .leaflet-popup-content-wrapper {
+            background-color: #91b8d8;
+            color: #fff;
+            border: 1px solid rgb(7, 6, 1);
+            border-radius: 0px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map">
+        <div class="leaflet-control coordinate"></div>
+    </div>
+</body>
+
+</html>
+
+<!-- leaflet js  -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<script src="./data/point.js"></script>
+<script src="./data/line.js"></script>
+<script src="./data/polygon.js"></script>
+
+
+<script>
+    // Map initialization
+    var map = L.map('map').setView([21.00233228360993, 105.84815116332499], 13);
+
+    map.eachLayer(function (layer) {
+        if (layer._url && layer._url.includes("tile.openstreetmap.org")) {
+            map.removeLayer(layer);
+        }
+    });
+
+    var iconBTS = L.icon({
+        iconUrl: './static/icon_4.png',
+
+
+        iconSize:     [40, 40], // size of the icon
+        iconAnchor:   [20, 40], // point of the icon which will correspond to marker's location
+        popupAnchor:  [0, -15] // point from which the popup should open relative to the iconAnchor
+    });
+
+    L.marker([21.00233228360993, 105.84815116332499], {icon: iconBTS}).addTo(map).bindPopup("<b>BTS No.1 Status</b><br> <a href='http://127.0.0.1:6868/cot2'>CLICK HERE</a>");
+    L.marker([21.00933228360993, 105.85915116332499], {icon: iconBTS}).addTo(map).bindPopup("<b>BTS No.2 Status</b><br> <a href='http://127.0.0.1:6868/cot2'>CLICK HERE</a>");
+    L.marker([21.01933228360993, 105.83915116332499], {icon: iconBTS}).addTo(map).bindPopup("<b>BTS No.3 Status</b><br> <a href='http://127.0.0.1:6868/cot1'>CLICK HERE</a>");
+    L.marker([21.01033228360993, 105.82315116332499], {icon: iconBTS}).addTo(map).bindPopup("<b>BTS No.4 Status</b><br> <a href='http://127.0.0.1:6868/cot1'>CLICK HERE</a>");
+    L.marker([21.01233228360993, 105.84915116332499], {icon: iconBTS}).addTo(map).bindPopup("<b>BTS No.5 Status</b><br> <a href='http://127.0.0.1:6868/cot1'>CLICK HERE</a>");
+    L.marker([21.01533228360993, 105.80015116332499], {icon: iconBTS}).addTo(map).bindPopup("<b>BTS No.6 Status</b><br> <a href='http://127.0.0.1:6868/cot1'>CLICK HERE</a>");
+
+    /*==============================================
+                TILE LAYER and WMS
+    ================================================*/
+    //osm layer
+    var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
+    osm.addTo(map);
+    // map.addLayer(osm)
+
+    // water color
+    var watercolor = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.{ext}', {
+        attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        subdomains: 'abcd',
+        minZoom: 1,
+        maxZoom: 16,
+        ext: 'jpg'
+    });
+    // watercolor.addTo(map)
+
+    // google street
+    googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+        maxZoom: 20,
+        subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+    });
+    googleStreets.addTo(map);
+
+    var wms = L.tileLayer.wms("http://localhost:8080/geoserver/wms", {
+        layers: 'geoapp:admin',
+        format: 'image/png',
+        transparent: true,
+        attribution: "wms test"
+    });
+
+
+
+    /*==============================================
+                        MARKER
+    ================================================*/
+
+    var secondMarker = L.marker([29.3949, 83.1240], { icon: myIcon, draggable: true });
+
+    console.log(singleMarker.toGeoJSON())
+
+
+    /*==============================================
+                GEOJSON
+    ================================================*/
+
+
+
+
+    /*==============================================
+                    LAYER CONTROL
+    ================================================*/
+    var baseMaps = {
+        "OSM": osm,
+        "Water color map": watercolor,
+        'Google Street': googleStreets,
+    };
+    var overlayMaps = {
+        "First Marker": singleMarker,
+        'Second Marker': secondMarker,
+        'Point Data': pointData,
+        'Line Data': lineData,
+        'Polygon Data': polygonData,
+        'wms': wms
+    };
+    //map.removeLayer(singleMarker)
+
+// Remove all default layers from OpenStreetMap
+
+    L.control.layers(baseMaps, overlayMaps, { collapsed: false }).addTo(map);
+
+    /*==============================================
+                    LEAFLET EVENTS
+    ================================================*/
+    map.on('mouseover', function () {
+        console.log('your mouse is over the map')
+    })
+
+    map.on('mousemove', function (e) {
+        document.getElementsByClassName('coordinate')[0].innerHTML = 'lat: ' + e.latlng.lat + 'lng: ' + e.latlng.lng;
+        console.log('lat: ' + e.latlng.lat, 'lng: ' + e.latlng.lng)
+    })
+
+
+    /*==============================================
+                    STYLE CUSTOMIZATION
+    ================================================*/
+
+
+</script>
