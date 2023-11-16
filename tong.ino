@@ -1,17 +1,22 @@
 #include <Firebase_ESP_Client.h>
 #include <WiFi.h>
+//Provide the token generation process info.
 #include <addons/TokenHelper.h>
 
 // Provide the RTDB payload printing info and other helper functions.
 #include <addons/RTDBHelper.h>
 
+// Provide my wifi contain ID and Password
 #define WIFI_SSID "Lab 307"
 #define WIFI_PASSWORD "307307307"
 
+// Insert Firebase project API Key
 #define API_KEY "O1UCPJb4lulFVUBsJyEaV4nlnCVmbUdUxzR696KD"
 
-/* 3. Define the RTDB URL */
+/* Define the RTDB URL */
 #define DATABASE_URL "https://svstartup-5c433-default-rtdb.firebaseio.com/"
+
+// define Firebase data object
 FirebaseData fbdo;
 
 FirebaseAuth auth;
@@ -25,7 +30,7 @@ int n = 1;;
 #define coi 27
 #define led 14
 
-#define Direction_Wind 19
+#define Direction_Wind 19 // direction sensor pin
 #define READ_TIME 1000 //ms
 #define WIND_SENSOR_PIN 15 //wind sensor pin
 #define WIND_SPEED_20_PULSE_SECOND 1.75  //in m/s this value depend on the sensor type
@@ -35,6 +40,10 @@ volatile unsigned long Rotations; //Cup rotation counter used in interrupt routi
 float WindSpeed; //Speed meter per second
 
 unsigned long gulStart_Read_Timer = 0;
+// prototype function
+void speedWind();
+void isr_rotation();
+
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
@@ -49,8 +58,11 @@ void setup() {
   Serial.println(WiFi.localIP());
   Serial.println();
 
+  // assign the api key (required)
   config.api_key = API_KEY;
+  // assign the RTDB URL (required)
   config.database_url = DATABASE_URL;
+  // sign up
   if (Firebase.signUp(&config, &auth, "", "")) {
     Serial.println("signUp OK");
     digitalWrite(coi, HIGH);
@@ -61,6 +73,7 @@ void setup() {
   else {
     Serial.println("%s\n");
   }
+  // Assign the callback function for the long running token generation task
   config.token_status_callback = tokenStatusCallback;
   Firebase.begin(&config, &auth);
   Firebase.reconnectWiFi(true);
@@ -68,11 +81,12 @@ void setup() {
 
   pinMode(led, OUTPUT);
   digitalWrite(led, HIGH);
+  // start protocol I2C with sensor JY901
   JY901.startIIC();
   // JY901.GetTime();
-
   pinMode(WIND_SENSOR_PIN, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(WIND_SENSOR_PIN), isr_rotation, CHANGE); //Set up the interrupt
+  //Set up the interrupt
+  attachInterrupt(digitalPinToInterrupt(WIND_SENSOR_PIN), isr_rotation, CHANGE); 
   sei(); //Enables interrupts
   gulStart_Read_Timer - millis();
 }
@@ -93,23 +107,6 @@ void setup() {
 //
 //  }
 //}
-void speedWind()
-{
-  if ((millis() - gulStart_Read_Timer) >= READ_TIME)
-  {
-    cli(); //Disable interrupts
-    WindSpeed = WIND_SPEED_20_PULSE_SECOND / ONE_ROTATION_SENSOR * (float)Rotations;
-    Serial.println(WindSpeed);
-    sei(); //Enables interrupts
-    Rotations = 0;
-    gulStart_Read_Timer = millis();
-  }
-}
-////// This is the function that the interrupt calls to increment the rotation count
-void isr_rotation()
-{
-  Rotations++;
-}
 void loop() {
   // put your main code here, to run repeatedly:
   //speedWind();
@@ -159,4 +156,21 @@ void loop() {
   }
   //      Serial.print("SPEED:");
   //      Serial.println(WindSpeed);
+}
+void speedWind()
+{
+  if ((millis() - gulStart_Read_Timer) >= READ_TIME)
+  {
+    cli(); //Disable interrupts
+    WindSpeed = WIND_SPEED_20_PULSE_SECOND / ONE_ROTATION_SENSOR * (float)Rotations;
+    Serial.println(WindSpeed);
+    sei(); //Enables interrupts
+    Rotations = 0;
+    gulStart_Read_Timer = millis();
+  }
+}
+////// This is the function that the interrupt calls to increment the rotation count
+void isr_rotation()
+{
+  Rotations++;
 }
