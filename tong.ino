@@ -82,7 +82,7 @@ void setup() {
   pinMode(led, OUTPUT);
   digitalWrite(led, HIGH);
   // start protocol I2C with sensor JY901
-  JY901.startIIC();
+  JY901.startIIC(); // default address of sensor is 0x50
   // JY901.GetTime();
   pinMode(WIND_SENSOR_PIN, INPUT_PULLUP);
   //Set up the interrupt
@@ -90,23 +90,7 @@ void setup() {
   sei(); //Enables interrupts
   gulStart_Read_Timer - millis();
 }
-//void jy901() {
-//  for (int i = 0; i < 50; i++) {
-//    //Angle
-//    float x1 = (float)JY901.stcAngle.Angle[0] / 32768 * 180;
-//    float y1 = (float)JY901.stcAngle.Angle[1] / 32768 * 180;
-//    float z1 = (float)JY901.stcAngle.Angle[2] / 32768 * 180;
-//    //Acc
-//    float x2 = (float)JY901.stcAcc.a[0] / 32768 * 16;
-//    float y2 = (float)JY901.stcAcc.a[1] / 32768 * 16;
-//    float z2 = (float)JY901.stcAcc.a[2] / 32768 * 16;
-//    //Gyro
-//    float x3 = (float)JY901.stcGyro.w[0] / 32768 * 2000;
-//    float y3 = (float)JY901.stcGyro.w[1] / 32768 * 2000;
-//    float z3 = (float)JY901.stcGyro.w[2] / 32768 * 2000;
-//
-//  }
-//}
+
 void loop() {
   // put your main code here, to run repeatedly:
   //speedWind();
@@ -174,3 +158,20 @@ void isr_rotation()
 {
   Rotations++;
 }
+//void jy901() {
+//  for (int i = 0; i < 50; i++) {
+//    //Angle
+//    float x1 = (float)JY901.stcAngle.Angle[0] / 32768 * 180;
+//    float y1 = (float)JY901.stcAngle.Angle[1] / 32768 * 180;
+//    float z1 = (float)JY901.stcAngle.Angle[2] / 32768 * 180;
+//    //Acc
+//    float x2 = (float)JY901.stcAcc.a[0] / 32768 * 16;
+//    float y2 = (float)JY901.stcAcc.a[1] / 32768 * 16;
+//    float z2 = (float)JY901.stcAcc.a[2] / 32768 * 16;
+//    //Gyro
+//    float x3 = (float)JY901.stcGyro.w[0] / 32768 * 2000;
+//    float y3 = (float)JY901.stcGyro.w[1] / 32768 * 2000;
+//    float z3 = (float)JY901.stcGyro.w[2] / 32768 * 2000;
+//
+//  }
+//}
