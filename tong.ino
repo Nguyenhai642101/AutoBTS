@@ -26,7 +26,7 @@ FirebaseConfig config;
 #include <JY901.h>
 unsigned long sendDataPrevMillis = 0;
 bool signupOK = false;
-int n = 1;;
+int n = 1;
 #define coi 27
 #define led 14
 
@@ -158,20 +158,3 @@ void isr_rotation()
 {
   Rotations++;
 }
-//void jy901() {
-//  for (int i = 0; i < 50; i++) {
-//    //Angle
-//    float x1 = (float)JY901.stcAngle.Angle[0] / 32768 * 180;
-//    float y1 = (float)JY901.stcAngle.Angle[1] / 32768 * 180;
-//    float z1 = (float)JY901.stcAngle.Angle[2] / 32768 * 180;
-//    //Acc
-//    float x2 = (float)JY901.stcAcc.a[0] / 32768 * 16;
-//    float y2 = (float)JY901.stcAcc.a[1] / 32768 * 16;
-//    float z2 = (float)JY901.stcAcc.a[2] / 32768 * 16;
-//    //Gyro
-//    float x3 = (float)JY901.stcGyro.w[0] / 32768 * 2000;
-//    float y3 = (float)JY901.stcGyro.w[1] / 32768 * 2000;
-//    float z3 = (float)JY901.stcGyro.w[2] / 32768 * 2000;
-//
-//  }
-//}
